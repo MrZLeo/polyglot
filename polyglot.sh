@@ -476,7 +476,6 @@ if [ -n "$ZSH_VERSION" ] && [ "${0#-}" != 'ksh' ] &&
   # dash from choking on hyphens
   ###########################################################
   _polyglot_zle_keymap_select() {
-    # [ "$KEYMAP" = 'vicmd' ] && psvar[4]='vicmd' || psvar[4]=''
     if [ "$KEYMAP" = 'vicmd' ]; then
       psvar[4]='vicmd'
       if [ "${POLYGLOT_VI_MODE_CURSOR:-1}" -ne 0 ]; then
