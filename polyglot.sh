@@ -420,6 +420,10 @@ _polyglot_cursor_bar() {
   printf '%b' '\e[6 q'
 }
 
+_polyglot_cursor_blink_block() {
+  printf '%b' '\e[0 q'
+}
+
 #####################################################################
 # zsh
 #####################################################################
@@ -491,6 +495,18 @@ if [ -n "$ZSH_VERSION" ] && [ "${0#-}" != 'ksh' ] &&
   zle -N _polyglot_zle_keymap_select
   zle -A _polyglot_zle_keymap_select zle-keymap-select
   zle -A _polyglot_zle_keymap_select zle-line-init
+
+  ###########################################################
+  # Reset cursor shape when command line is accepted
+  ###########################################################
+  _polyglot_zle_line_finish() {
+    if [ "${POLYGLOT_VI_MODE_CURSOR:-1}" -ne 0 ]; then
+      _polyglot_cursor_blink_block
+    fi
+  }
+
+  zle -N _polyglot_zle_line_finish
+  zle -A _polyglot_zle_line_finish zle-line-finish
 
   ###########################################################
   # Redraw prompt when terminal size changes
