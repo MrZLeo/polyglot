@@ -405,6 +405,22 @@ _polyglot_venv() {
 }
 
 #####################################################################
+# Cursor shape escape sequences for vi mode
+#
+#
+# POLYGLOT_VI_MODE_CURSOR values:
+#   0 - Disabled
+#   1 - Enabled (default)
+#####################################################################
+_polyglot_cursor_block() {
+  printf '%b' '\e[2 q'
+}
+
+_polyglot_cursor_bar() {
+  printf '%b' '\e[6 q'
+}
+
+#####################################################################
 # zsh
 #####################################################################
 
@@ -456,7 +472,18 @@ if [ -n "$ZSH_VERSION" ] && [ "${0#-}" != 'ksh' ] &&
   # dash from choking on hyphens
   ###########################################################
   _polyglot_zle_keymap_select() {
-    [ "$KEYMAP" = 'vicmd' ] && psvar[4]='vicmd' || psvar[4]=''
+    # [ "$KEYMAP" = 'vicmd' ] && psvar[4]='vicmd' || psvar[4]=''
+    if [ "$KEYMAP" = 'vicmd' ]; then
+      psvar[4]='vicmd'
+      if [ "${POLYGLOT_VI_MODE_CURSOR:-1}" -ne 0 ]; then
+        _polyglot_cursor_block
+      fi
+    else
+      psvar[4]=''
+      if [ "${POLYGLOT_VI_MODE_CURSOR:-1}" -ne 0 ]; then
+        _polyglot_cursor_bar
+      fi
+    fi
     zle reset-prompt
     zle -R
   }
