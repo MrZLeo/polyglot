@@ -309,24 +309,6 @@ _polyglot_branch_status() {
 }
 
 ###########################################################
-# Native sh alternative to basename. See
-# https://github.com/dylanaraps/pure-sh-bible
-#
-# Arguments:
-#   $1 Filename
-#   $2 Suffix
-###########################################################
-_polyglot_basename() {
-  POLYGLOT_BASENAME_DIR=${1%"${1##*[!/]}"}
-  POLYGLOT_BASENAME_DIR=${POLYGLOT_BASENAME_DIR##*/}
-  POLYGLOT_BASENAME_DIR=${POLYGLOT_BASENAME_DIR%"$2"}
-
-  printf '%s\n' "${POLYGLOT_BASENAME_DIR:-/}"
-
-  unset POLYGLOT_BASENAME_DIR
-}
-
-###########################################################
 # Tests to see if the current shell is busybox ash
 ###########################################################
 _polyglot_is_busybox() {
@@ -569,7 +551,7 @@ elif [ -n "$BASH_VERSION" ]; then
         PS1+="\u$(printf '%s' "$POLYGLOT_HOSTNAME_STRING") "
         case $BASH_VERSION in
           1.*|2.*|3.*)
-           PS1="\$(_polyglot_prompt_dirtrim \$POLYGLOT_PROMPT_DIRTRIM)"
+           PS1+="\$(_polyglot_prompt_dirtrim \$POLYGLOT_PROMPT_DIRTRIM)"
            ;;
           *) PS1+="\w" ;;
         esac
@@ -754,7 +736,7 @@ elif _polyglot_is_pdksh || [ "${0#-}" = 'dash' ] || _polyglot_is_busybox ||
 
   if _polyglot_is_pdksh &&
      _polyglot_has_colors &&
-     [ ${POLYGLOT_PDKSH_COLORS:-1} -ne 0 ]; then
+     [ "${POLYGLOT_PDKSH_COLORS:-1}" -ne 0 ]; then
 
     PS1=$(print "$POLYGLOT_NP\r")
     case $POLYGLOT_UNAME in
@@ -802,7 +784,7 @@ else
 fi
 
 # Clean up environment
-unset -f _polyglot_is_ssh _polyglot_basename _polyglot_is_busybox \
-  _polyglot_is_dtksh _polyglot_is_pdksh _polyglot_sh_is_dash _polyglot_is_yash
+unset -f _polyglot_is_ssh _polyglot_is_busybox _polyglot_is_dtksh \
+         _polyglot_is_pdksh _polyglot_sh_is_dash _polyglot_is_yash
 
 # vim: ts=2:et:sts=2:sw=2
